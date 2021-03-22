@@ -144,7 +144,12 @@ void music_scale_user(void) {
 
 #ifdef ENCODER_ENABLE
 void encoder_update_user(uint8_t index, bool clockwise) {
-     clockwise ? tap_code(KC_VOLD) : tap_code(KC_VOLU);
+    if (get_mods() & MOD_MASK_CTRL)
+        clockwise ? tap_code(KC_PGDN) : tap_code(KC_PGUP); // Cycle Tabs in Chrome
+    else if (get_mods() & MOD_MASK_ALT)
+        clockwise ? tap_code(KC_LEFT) : tap_code(KC_RIGHT); // Alt left and right
+    else
+        clockwise ? tap_code(KC_VOLD) : tap_code(KC_VOLU); // Adjust volume
 }
 #endif  // ENCODER_ENABLE
 
@@ -195,5 +200,26 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   return false;
 };
 
+layer_state_t layer_state_set_user(layer_state_t state) {
+    switch (get_highest_layer(state)) {
+    case _LOWER:
+        rgblight_setrgb (0xFF,  0x00, 0xFF);
+        break;
+    case _RAISE:
+        rgblight_setrgb (0x00,  0xFF, 0x00);
+        break;
+    case _GAME:
+        rgblight_setrgb (0xFF,  0x00, 0x00);
+        break;
+    default: //  for any other layers, or the default layer
+        rgblight_setrgb (0xFF,  0xFF, 0xFF);
+        break;
+    }
+  return state;
+}
 
+void keyboard_post_init_user(){
+    rgblight_setrgb (0xFF,  0xFF, 0xFF);
+    rgblight_mode(1);
+}
 
