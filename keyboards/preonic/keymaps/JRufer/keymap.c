@@ -1,7 +1,9 @@
 #include QMK_KEYBOARD_H
-#include "muse.h"
 #include "../../preonic.h"
 #include "config.h"
+#include "audio.c"
+#include "oled.c"
+#include "rgb.c"
 
 
 enum preonic_layers {
@@ -17,7 +19,8 @@ enum preonic_keycodes {
   GAME,
   LOWER,
   RAISE,
-  ADJUST
+  ADJUST,
+
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -95,7 +98,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|------+------+------+------+------+------|
  * |      |      |      |      |      |  N   |   B  |  V   |   Z  |  X   |  C   |  /   |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |QWERTY|MU_TOG|MU_MOD|      | left |    space    | DOWN | RIGHT|  0   |  .   | ENTR |
+ * |QWERTY|      |      |      | left |    space    | DOWN | RIGHT|  0   |  .   | ENTR |
  * `-----------------------------------------------------------------------------------'
  */
 [_GAME] = LAYOUT_preonic_grid( \
@@ -103,7 +106,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   _______, _______, _______, _______, _______, KC_PGUP, KC_T,    KC_R,    KC_Q,    KC_W,    KC_E,    KC_I,    \
   _______, _______, _______, _______, _______, KC_PGDN, KC_G,    KC_F,    KC_A,    KC_S,    KC_D,    KC_H,    \
   _______, _______, _______, _______, _______, KC_N,    KC_B,    KC_V,    KC_Z,    KC_X,    KC_C,    KC_SLSH, \
-  QWERTY,  MU_TOG,  MU_MOD,  _______, KC_LEFT, _______, KC_SPC,  KC_DOWN, KC_RGHT, KC_0,    KC_DOT,  KC_ENT   \
+  QWERTY,  _______, _______,  _______, KC_LEFT, _______, KC_SPC,  KC_DOWN, KC_RGHT, KC_0,    KC_DOT,  KC_ENT   \
 ),
 
 /* adjust
@@ -114,53 +117,39 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+-------------+------+------+------+------+------|
  * |      |      |      |      |      |      |      |      |      |      |      |      |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
- * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * | ASTG |      |      |      |      |      |      |      |      |      |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |      |      |      |    space    |      |      |      |      |      |
+ * |      |MU_TOG|MU_MOD|      |      |    space    |      |      |      |      |      |
  * `-----------------------------------------------------------------------------------'
  */
 [_ADJUST] = LAYOUT_preonic_grid( \
   KC_ESC,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,  \
-  _______, _______, _______, _______, KC_TRNS, _______, _______, KC_TRNS, _______, _______, _______, _______ \
+  KC_ASTG, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,  \
+  _______, MU_TOG,  MU_MOD,  _______, KC_TRNS, _______, _______, KC_TRNS, _______, _______, _______, _______ \
 )
 };
 
-#ifdef AUDIO_ENABLE
 
-float tone_startup[][2] = {
-  {NOTE_B5, 20},
-  {NOTE_B6, 8}
-};
-float tone_colemak[][2] = SONG(COLEMAK_SOUND);
-float tone_game[][2]    = {
-  {NOTE_E6, 10}   ,{NOTE_E6, 10}  ,{NOTE_REST, 10} ,{NOTE_E6, 10}   ,
-  {NOTE_REST, 10} ,{NOTE_C6, 10}  ,{NOTE_E6, 10}   ,{NOTE_REST, 10} ,
-  {NOTE_G6, 10}   ,{NOTE_REST, 30},
-  {NOTE_G5, 10}   ,{NOTE_REST, 30}
-};
-float tone_goodbye[][2] = SONG(GOODBYE_SOUND);
-float music_scale[][2]  = SONG(MUSIC_SCALE_SOUND);
 
+//kb startup custom code
 void startup_user() {
-  PLAY_SONG(tone_startup);
+    #ifdef AUDIO_ENABLE
+    //audio_startup_custom();
+    #endif
 }
+//kb shutdown custom code
 void shutdown_user() {
-  PLAY_SONG(tone_goodbye);
-  stop_all_notes();
+
 }
 
-void music_on_user(void) {
-  music_scale_user();
-}
-void music_scale_user(void) {
-  PLAY_SONG(music_scale);
+// hook into kb startup
+void matrix_init_user(void) {
+  startup_user();
 }
 
-#endif
-
+// custom behavior for encoder interaction
 #ifdef ENCODER_ENABLE
 void encoder_update_user(uint8_t index, bool clockwise) {
     if (get_mods() & MOD_MASK_CTRL)
@@ -172,12 +161,7 @@ void encoder_update_user(uint8_t index, bool clockwise) {
 }
 #endif  // ENCODER_ENABLE
 
-void matrix_init_user(void) {
-  #ifdef AUDIO_ENABLE
-  startup_user();
-  #endif
-}
-
+// key intercept to assign custom behavior
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case QWERTY:
@@ -186,7 +170,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         PLAY_SONG(tone_colemak);
         #endif
         layer_move(_QWERTY);
-        autoshift_enable();
       }
       break;
     case GAME:
@@ -195,13 +178,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         PLAY_SONG(tone_game);
         #endif
         layer_move(_GAME);
-        autoshift_disable();
       }
       break;
     case RAISE:
       if (record->event.pressed) {
         layer_on(_RAISE);
-
       } else {
         layer_off(_RAISE);
       }
@@ -209,7 +190,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case LOWER:
       if (record->event.pressed) {
         layer_on(_LOWER);
-
       } else {
         layer_off(_LOWER);
       }
@@ -217,7 +197,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case ADJUST:
       if (record->event.pressed) {
         layer_on(_ADJUST);
-
       } else {
         layer_off(_ADJUST);
       }
@@ -229,6 +208,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   return false;
 };
 
+//custom actions on layer change
 layer_state_t layer_state_set_user(layer_state_t state) {
     switch (get_highest_layer(state)) {
     case _LOWER:
@@ -236,6 +216,9 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         break;
     case _RAISE:
         rgblight_setrgb (0x00,  0xFF, 0x00);
+        break;
+    case _ADJUST:
+        rgblight_setrgb (0x00,  0x00, 0x00);
         break;
     case _GAME:
         rgblight_setrgb (0xFF,  0x00, 0x00);
@@ -255,74 +238,3 @@ void keyboard_post_init_user(){
     render_logo();
     #endif
 }
-
-#ifdef OLED_DRIVER_ENABLE
-//Setup some mask which can be or'd with bytes to turn off pixels
-const uint8_t single_bit_masks[8] = {127, 191, 223, 239, 247, 251, 253, 254};
-
-static void fade_display(void) {
-    //Define the reader structure
-    oled_buffer_reader_t reader;
-    uint8_t buff_char;
-    if (random() % 30 == 0) {
-        srand(timer_read());
-        // Fetch a pointer for the buffer byte at index 0. The return structure
-        // will have the pointer and the number of bytes remaining from this
-        // index position if we want to perform a sequential read by
-        // incrementing the buffer pointer
-        reader = oled_read_raw(0);
-        //Loop over the remaining buffer and erase pixels as we go
-        for (uint16_t i = 0; i < reader.remaining_element_count; i++) {
-            //Get the actual byte in the buffer by dereferencing the pointer
-            buff_char = *reader.current_element;
-            if (buff_char != 0) {
-                oled_write_raw_byte(buff_char & single_bit_masks[rand() % 8], i);
-            }
-            //increment the pointer to fetch a new byte during the next loop
-            reader.current_element++;
-        }
-    }
-}
-
-//Custom Logo for display
-static void render_logo(void) {
-    static const char PROGMEM logo[] = {
-        // 'ninininOL', 128x32px
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x01, 0x80, 0x00, 0x0c, 0x00, 0x00, 0x60, 0x00, 0x00, 0x00, 0x00, 0x00, 0x18, 0x00,
-0x00, 0x00, 0x03, 0xc0, 0x00, 0x1e, 0x00, 0x00, 0xf0, 0x00, 0x00, 0x00, 0x0f, 0xe0, 0x3c, 0x00,
-0x00, 0x00, 0x03, 0xc0, 0x00, 0x1e, 0x00, 0x00, 0xf0, 0x00, 0x00, 0x00, 0x3f, 0xf0, 0x3c, 0x00,
-0x00, 0x00, 0x03, 0x80, 0x00, 0x1c, 0x00, 0x00, 0xe0, 0x00, 0x00, 0x00, 0x7f, 0xf0, 0x38, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfe, 0x78, 0x38, 0x00,
-0x00, 0xef, 0x80, 0x07, 0x7c, 0x00, 0x3b, 0xe0, 0x01, 0xdf, 0x00, 0x01, 0xf0, 0x38, 0x78, 0x00,
-0x00, 0xff, 0xc7, 0x07, 0xfe, 0x38, 0x3f, 0xf1, 0xc1, 0xff, 0x80, 0x03, 0xe0, 0x38, 0x78, 0x00,
-0x01, 0xff, 0xc7, 0x0f, 0xfe, 0x38, 0x7f, 0xf1, 0xc3, 0xff, 0x80, 0x03, 0xc0, 0x38, 0x70, 0x00,
-0x01, 0xfb, 0xc7, 0x0f, 0xde, 0x38, 0x7e, 0xf1, 0xc3, 0xf7, 0x87, 0x07, 0x80, 0x38, 0xf0, 0x00,
-0x01, 0xf3, 0xc7, 0x0f, 0x9e, 0x38, 0x7c, 0xf1, 0xc3, 0xe7, 0x8f, 0x07, 0x80, 0x78, 0xf0, 0x00,
-0x03, 0xe3, 0x8f, 0x1f, 0x1c, 0x78, 0xf8, 0xe3, 0xc7, 0xc7, 0x0f, 0x0f, 0x00, 0x70, 0xe0, 0x00,
-0x03, 0xc7, 0x8e, 0x1e, 0x3c, 0x70, 0xf1, 0xe3, 0x87, 0x8f, 0x0e, 0x0f, 0x00, 0xf0, 0xe0, 0x00,
-0x03, 0x87, 0x8e, 0x1c, 0x3c, 0x70, 0xe1, 0xe3, 0x87, 0x0f, 0x00, 0x0e, 0x01, 0xe1, 0xe0, 0x70,
-0x07, 0x87, 0x0e, 0x3c, 0x38, 0x71, 0xe1, 0xc3, 0x8f, 0x0e, 0x00, 0x0e, 0x03, 0xe1, 0xc3, 0xf0,
-0x07, 0x0f, 0x1e, 0x38, 0x78, 0xf1, 0xc3, 0xc7, 0x8e, 0x1e, 0x00, 0x0f, 0x0f, 0xc1, 0xcf, 0xf0,
-0x07, 0x0f, 0x1c, 0x38, 0x78, 0xe1, 0xc3, 0xc7, 0x0e, 0x1e, 0x00, 0x0f, 0xff, 0x81, 0xff, 0xc0,
-0x07, 0x0e, 0x1c, 0x38, 0x70, 0xe1, 0xc3, 0x87, 0x0e, 0x1c, 0x00, 0x07, 0xfe, 0x01, 0xfe, 0x00,
-0x07, 0x0e, 0x1c, 0x38, 0x70, 0xe1, 0xc3, 0x87, 0x0e, 0x1c, 0x00, 0x03, 0xf8, 0x00, 0xf8, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-    };
-
-    oled_write_raw_P(logo, sizeOf(logo));
-
-}
-#endif
