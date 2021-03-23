@@ -167,6 +167,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         PLAY_SONG(tone_colemak);
         #endif
         layer_move(_QWERTY);
+        autoshift_enable();
       }
       break;
     case GAME:
@@ -175,6 +176,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         PLAY_SONG(tone_game);
         #endif
         layer_move(_GAME);
+        autoshift_disable();
       }
       break;
     case RAISE:
