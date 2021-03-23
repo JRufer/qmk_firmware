@@ -69,11 +69,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* Lower - SETTINGS
  * ,-----------------------------------------------------------------------------------.
- * | RESET|      |      |      |      |      |      |      |      |      |      |      |
+ * |      |      |      |      |      |      |      |      |      |      |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * | RESET|      |      |      |      |      |      |      |      |      |      |      |
+ * |      |      |      |      |      |      |      |      |      |      |      |      |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
- * | DEBUG|      |      |      |      |      |      |      |      |      |      |      |
+ * |      |      |      |      |      |      |      |      |      |      |      |      |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
  * |      |      |      |      |      |      |      |      |      |      |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
@@ -109,29 +109,27 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   QWERTY,  _______, _______,  _______, KC_LEFT, _______, KC_SPC,  KC_DOWN, KC_RGHT, KC_0,    KC_DOT,  KC_ENT   \
 ),
 
-/* adjust
+/* adjust ( LOWER + RAISE )
  * ,-----------------------------------------------------------------------------------.
  * | ESC  |      |      |      |      |      |      |      |      |      |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * | RESET|      |      |      |      |      |      |      |      |      |      |      |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
  * |      |      |      |      |      |      |      |      |      |      |      |      |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
  * | ASTG |      |      |      |      |      |      |      |      |      |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |MU_TOG|MU_MOD|      |      |    space    |      |      |      |      |      |
+ * |      |MU_TOG|MU_MOD|      |      |             |      |      |      |      |      |
  * `-----------------------------------------------------------------------------------'
  */
 [_ADJUST] = LAYOUT_preonic_grid( \
   KC_ESC,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+  RESET,   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
   KC_ASTG, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,  \
-  _______, MU_TOG,  MU_MOD,  _______, KC_TRNS, _______, _______, KC_TRNS, _______, _______, _______, _______ \
+  _______, MU_TOG,  MU_MOD,  _______, _______, _______, _______, _______, _______, _______, _______, _______ \
 )
 };
-
-
 
 //kb startup custom code
 void startup_user() {
@@ -152,12 +150,12 @@ void matrix_init_user(void) {
 // custom behavior for encoder interaction
 #ifdef ENCODER_ENABLE
 void encoder_update_user(uint8_t index, bool clockwise) {
-    if (get_mods() & MOD_MASK_CTRL)
+     if (get_mods() & MOD_MASK_CTRL)
         clockwise ? tap_code(KC_PGDN) : tap_code(KC_PGUP); // Cycle Tabs in Chrome
-    else if (get_mods() & MOD_MASK_ALT)
-        clockwise ? tap_code(KC_LEFT) : tap_code(KC_RIGHT); // Alt left and right
-    else
-        clockwise ? tap_code(KC_VOLD) : tap_code(KC_VOLU); // Adjust volume
+     else if (get_mods() & MOD_MASK_ALT)
+         clockwise ? tap_code(KC_LEFT) : tap_code(KC_RIGHT); // Alt left and right
+     else
+         clockwise ? tap_code(KC_VOLD) : tap_code(KC_VOLU); // Adjust volume
 }
 #endif  // ENCODER_ENABLE
 
@@ -166,40 +164,33 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case QWERTY:
       if (record->event.pressed) {
-        #ifdef AUDIO_ENABLE
-        PLAY_SONG(tone_colemak);
-        #endif
         layer_move(_QWERTY);
       }
       break;
     case GAME:
       if (record->event.pressed) {
-        #ifdef AUDIO_ENABLE
-        PLAY_SONG(tone_game);
-        #endif
         layer_move(_GAME);
-      }
-      break;
-    case RAISE:
-      if (record->event.pressed) {
-        layer_on(_RAISE);
-      } else {
-        layer_off(_RAISE);
       }
       break;
     case LOWER:
       if (record->event.pressed) {
         layer_on(_LOWER);
+        update_tri_layer(_LOWER, _RAISE, _ADJUST);
       } else {
         layer_off(_LOWER);
+        update_tri_layer(_LOWER, _RAISE, _ADJUST);
       }
+      return false;
       break;
-    case ADJUST:
+    case RAISE:
       if (record->event.pressed) {
-        layer_on(_ADJUST);
+        layer_on(_RAISE);
+        update_tri_layer(_LOWER, _RAISE, _ADJUST);
       } else {
-        layer_off(_ADJUST);
+        layer_off(_RAISE);
+        update_tri_layer(_LOWER, _RAISE, _ADJUST);
       }
+      return false;
       break;
     default:
       return true;
@@ -222,9 +213,15 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         break;
     case _GAME:
         rgblight_setrgb (0xFF,  0x00, 0x00);
+        #ifdef AUDIO_ENABLE
+        PLAY_SONG(tone_game);
+        #endif
         break;
     default: //  for any other layers, or the default layer
         rgblight_setrgb (0xFF,  0xFF, 0xFF);
+        #ifdef AUDIO_ENABLE
+        PLAY_SONG(tone_qwerty);
+        #endif
         break;
     }
   return state;

@@ -8,7 +8,7 @@ float tone_startup[][2] = {
   {NOTE_B5, 20},
   {NOTE_B6, 8}
 };
-float tone_colemak[][2] = SONG(COLEMAK_SOUND);
+float tone_qwerty[][2] = SONG(QWERTY_SOUND);
 float tone_game[][2]    = {
   {NOTE_E6, 10}   ,{NOTE_E6, 10}  ,{NOTE_REST, 10} ,{NOTE_E6, 10}   ,
   {NOTE_REST, 10} ,{NOTE_C6, 10}  ,{NOTE_E6, 10}   ,{NOTE_REST, 10} ,
