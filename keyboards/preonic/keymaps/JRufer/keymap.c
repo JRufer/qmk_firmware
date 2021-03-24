@@ -117,7 +117,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+-------------+------+------+------+------+------|
  * |      |      |      |      |      |      |      |      |      |      |      |      |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
- * | ASTG |      |      |      |      |      |      |      |      |      |      |      |
+ * | ASTG |Voice-|Voice+|      |      |      |      |      |      |      |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |MU_TOG|MU_MOD|      |      |             |      |      |      |      |      |
  * `-----------------------------------------------------------------------------------'
@@ -126,7 +126,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_ESC,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
   RESET,   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-  KC_ASTG, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,  \
+  KC_ASTG, MUV_DE,  MUV_IN,  _______, _______, _______, _______, _______, _______, _______, _______, _______,  \
   _______, MU_TOG,  MU_MOD,  _______, _______, _______, _______, _______, _______, _______, _______, _______ \
 )
 };
@@ -150,12 +150,12 @@ void matrix_init_user(void) {
 // custom behavior for encoder interaction
 #ifdef ENCODER_ENABLE
 void encoder_update_user(uint8_t index, bool clockwise) {
-     if (get_mods() & MOD_MASK_CTRL)
+    if (get_mods() & MOD_MASK_CTRL)
         clockwise ? tap_code(KC_PGDN) : tap_code(KC_PGUP); // Cycle Tabs in Chrome
-     else if (get_mods() & MOD_MASK_ALT)
-         clockwise ? tap_code(KC_LEFT) : tap_code(KC_RIGHT); // Alt left and right
-     else
-         clockwise ? tap_code(KC_VOLD) : tap_code(KC_VOLU); // Adjust volume
+    else if (get_mods() & MOD_MASK_ALT)
+        clockwise ? tap_code(KC_LEFT) : tap_code(KC_RIGHT); // Alt left and right
+    else
+        clockwise ? tap_code(KC_VOLD) : tap_code(KC_VOLU); // Adjust volume
 }
 #endif  // ENCODER_ENABLE
 
@@ -195,7 +195,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     default:
       return true;
   }
-
   return false;
 };
 
@@ -217,11 +216,8 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         PLAY_SONG(tone_game);
         #endif
         break;
-    default: //  for any other layers, or the default layer
+    case _QWERTY: //the default layer
         rgblight_setrgb (0xFF,  0xFF, 0xFF);
-        #ifdef AUDIO_ENABLE
-        PLAY_SONG(tone_qwerty);
-        #endif
         break;
     }
   return state;
