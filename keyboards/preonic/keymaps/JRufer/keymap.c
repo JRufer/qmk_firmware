@@ -52,32 +52,32 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+-------------+------+------+------+------+------|
  * |      |   (  |   )  |   -  |   =  |      |      |      |      |  _   |   =  |  Del |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
- * |      |   {  |   }  |   ;  |   '  |      |      |      |      |      |      | Home |
+ * |      |   {  |   }  |   ;  |   '  |      |      |      |      |      |   \  | Home |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
- * | Shift|   [  |   ]  |   ,  |   .  |   /  |      |      |      |      |      | End  |
+ * | Shift|   [  |   ]  |   ,  |   .  |   /  |      |      |      |      |   /  | End  |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * | GAME |      |      |      |      |             |      | Left | Down | Up   | Right|
+ * | GAME |   <  |   >  |      |      |             |      | Left | Down | Up   | Right|
  * `-----------------------------------------------------------------------------------'
  */
 [_RAISE] = LAYOUT_preonic_grid( \
   KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_BSPC, \
   _______, KC_LPRN, KC_RPRN, KC_MINS, KC_EQL,  _______, _______, _______, _______, KC_UNDS, KC_EQL,  KC_DEL,  \
-  _______, KC_LCBR, KC_RCBR, KC_SCLN, KC_QUOT, _______, _______, _______, _______, _______, _______, KC_HOME, \
-  KC_LSFT, KC_LBRC, KC_RBRC, KC_COMM, KC_DOT,  KC_SLSH, _______, _______, _______, _______, _______, KC_END, \
+  _______, KC_LCBR, KC_RCBR, KC_SCLN, KC_QUOT, _______, _______, _______, _______, _______, KC_BSLS, KC_HOME, \
+  KC_LSFT, KC_LBRC, KC_RBRC, KC_COMM, KC_DOT,  KC_SLSH, _______, _______, _______, _______, KC_SLSH, KC_END, \
   GAME,    KC_LT,   KC_GT,   _______, KC_TRNS, _______, _______, KC_TRNS, KC_LEFT, KC_UP,   KC_DOWN, KC_RIGHT \
 ),
 
-/* Lower - SETTINGS
+/* Lower
  * ,-----------------------------------------------------------------------------------.
- * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * | RESET|  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |  F7  |  F8  |  F9  |  F10 |  F11 |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * | RESET|      |      |      |      |  INS | HOME | PGDN |  7   |  8   |  9   |  F12 |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
- * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * | DEBUG|      |      |      |      |  DEL | END  | PGUP |  4   |  5   |  6   |      |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
- * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |      |BLSEP |RGBMOD|      |      |      |      |      |  1   |  2   |  3   | ENTR |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * | GAME |      |      |      |      |             |      |      |      |      |      |
+ * | GAME |BLTOG |RGBTOG|      |      |             |      |  0   |  .   |      | ENTR |
  * `-----------------------------------------------------------------------------------'
  */
 [_LOWER] = LAYOUT_preonic_grid( \
@@ -94,19 +94,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |      |      |      |      | PgUp |   T  |  R   |  Q   |  W   |  E   |  I   |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
- * |      |      |      |      |      | PgDn |   G  |  F   |   A  |   S  |   D  |  H   |
+ * |      | 5MIN | SSVID|      |      | PgDn |   G  |  F   |   A  |   S  |   D  |  H   |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
- * |      |      |      |      |      |  N   |   B  |  V   |   Z  |  X   |  C   |  /   |
+ * |      |GFSS  |  F12 | GFPHO|      |  N   |   B  |  V   |   Z  |  X   |  C   |  /   |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |QWERTY|      |      |      | left |    space    | DOWN | RIGHT|  0   |  .   | ENTR |
  * `-----------------------------------------------------------------------------------'
  */
 [_GAME] = LAYOUT_preonic_grid( \
-  KC_ESC,  _______, _______, _______, _______, KC_ESC,  KC_5,    KC_4,    KC_1,    KC_2,    KC_3,    KC_M,    \
-  _______, _______, _______, _______, _______, KC_PGUP, KC_T,    KC_R,    KC_Q,    KC_W,    KC_E,    KC_I,    \
-  _______, _______, _______, _______, _______, KC_PGDN, KC_G,    KC_F,    KC_A,    KC_S,    KC_D,    KC_H,    \
-  _______, _______, _______, _______, _______, KC_N,    KC_B,    KC_V,    KC_Z,    KC_X,    KC_C,    KC_SLSH, \
-  QWERTY,  _______, _______,  _______, KC_LEFT, _______, KC_SPC,  KC_DOWN, KC_RGHT, KC_0,    KC_DOT,  KC_ENT   \
+  KC_ESC,  _______,       _______,    _______,     _______, KC_ESC,  KC_5,    KC_4,    KC_1,    KC_2,    KC_3,    KC_M,    \
+  _______, _______,        _______,   _______,     _______, KC_PGUP, KC_T,    KC_R,    KC_Q,    KC_W,    KC_E,    KC_I,    \
+  _______, LCTL(KC_PGUP), LALT(KC_Y), _______,     _______, KC_PGDN, KC_G,    KC_F,    KC_A,    KC_S,    KC_D,    KC_H,    \
+  _______, LCTL(KC_HOME), KC_F12,        LALT(KC_F2), _______, KC_N,    KC_B,    KC_V,    KC_Z,    KC_X,    KC_C,    KC_SLSH, \
+  QWERTY,  _______,       _______,    _______,     KC_LEFT, _______, KC_SPC,  KC_DOWN, KC_RGHT, KC_0,    KC_DOT,  KC_ENT   \
 ),
 
 /* adjust ( LOWER + RAISE )
@@ -131,6 +131,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 )
 };
 
+uint16_t activeLayer;
 //kb startup custom code
 void startup_user() {
     #ifdef AUDIO_ENABLE
@@ -150,12 +151,19 @@ void matrix_init_user(void) {
 // custom behavior for encoder interaction
 #ifdef ENCODER_ENABLE
 void encoder_update_user(uint8_t index, bool clockwise) {
-    if (get_mods() & MOD_MASK_CTRL)
-        clockwise ? tap_code(KC_PGDN) : tap_code(KC_PGUP); // Cycle Tabs in Chrome
-    else if (get_mods() & MOD_MASK_ALT)
-        clockwise ? tap_code(KC_LEFT) : tap_code(KC_RIGHT); // Alt left and right
-    else
-        clockwise ? tap_code(KC_VOLD) : tap_code(KC_VOLU); // Adjust volume
+    switch (activeLayer) {
+        case _LOWER:
+            clockwise ? tap_code(KC_PGDN) : tap_code(KC_PGUP); // Cycle Tabs in Chrome
+            break;
+        case _RAISE:
+            clockwise ? tap_code(KC_LEFT) : tap_code(KC_RIGHT); // Alt left and right
+            break;
+        case _ADJUST:
+            break;
+        default:
+            clockwise ? tap_code(KC_VOLD) : tap_code(KC_VOLU); // Adjust volume
+            break;
+    }
 }
 #endif  // ENCODER_ENABLE
 
@@ -200,7 +208,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 //custom actions on layer change
 layer_state_t layer_state_set_user(layer_state_t state) {
-    switch (get_highest_layer(state)) {
+    activeLayer = get_highest_layer(state);
+    switch (activeLayer) {
     case _LOWER:
         rgblight_setrgb (0xFF,  0x00, 0xFF);
         break;
@@ -220,7 +229,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         rgblight_setrgb (0xFF,  0xFF, 0xFF);
         break;
     }
-  return state;
+    return state;
 }
 
 void keyboard_post_init_user(){
