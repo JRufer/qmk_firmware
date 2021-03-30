@@ -38,12 +38,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * | Ctrl | GUI  | Alt  |MU_TOG| LOWER|    Space    |RAISE | Left | Down |  Up  |Right |
  * `-----------------------------------------------------------------------------------'
  */
-[_QWERTY] = LAYOUT_preonic_grid( \
+[_QWERTY] = LAYOUT_preonic_1x2uC( \
   KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC, \
   KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_DEL,  \
   KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, \
   KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT,  \
-  KC_LCTL, KC_LGUI, KC_LALT, AU_TOG,  LOWER,   KC_SPC,  KC_SPC,  RAISE,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT  \
+  KC_LCTL, KC_LGUI, KC_LALT, KC_LEAD, LOWER,       KC_SPC,       RAISE,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT  \
 ),
 
 /* Raise - Programming
@@ -59,12 +59,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * | GAME |   <  |   >  |      |      |             |      | Left | Down | Up   | Right|
  * `-----------------------------------------------------------------------------------'
  */
-[_RAISE] = LAYOUT_preonic_grid( \
+[_RAISE] = LAYOUT_preonic_1x2uC( \
   KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_BSPC, \
   _______, KC_LPRN, KC_RPRN, KC_MINS, KC_EQL,  _______, _______, _______, _______, KC_UNDS, KC_EQL,  KC_DEL,  \
   _______, KC_LCBR, KC_RCBR, KC_SCLN, KC_QUOT, _______, _______, _______, _______, _______, KC_BSLS, KC_HOME, \
   KC_LSFT, KC_LBRC, KC_RBRC, KC_COMM, KC_DOT,  KC_SLSH, _______, _______, _______, _______, KC_SLSH, KC_END, \
-  GAME,    KC_LT,   KC_GT,   _______, KC_TRNS, _______, _______, KC_TRNS, KC_LEFT, KC_UP,   KC_DOWN, KC_RIGHT \
+  GAME,    KC_LT,   KC_GT,   _______, KC_TRNS,      _______,     KC_TRNS, KC_LEFT, KC_UP,   KC_DOWN, KC_RIGHT \
 ),
 
 /* Lower
@@ -80,12 +80,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * | GAME |BLTOG |RGBTOG|      |      |             |      |  0   |  .   |      | ENTR |
  * `-----------------------------------------------------------------------------------'
  */
-[_LOWER] = LAYOUT_preonic_grid( \
+[_LOWER] = LAYOUT_preonic_1x2uC( \
   RESET,   KC_F1,  KC_F2,    KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  \
   RESET,   _______, _______, _______, _______, KC_INS,  KC_HOME, KC_PGUP, KC_7,    KC_8,    KC_9,    KC_F12,  \
   DEBUG,   _______, _______, _______, _______, KC_DEL,  KC_END,  KC_PGDN, KC_4,    KC_5,    KC_6,    _______, \
   _______, BL_STEP, RGB_MOD, _______, _______, _______, _______, _______, KC_1,    KC_2,    KC_3,    KC_ENT,  \
-  GAME,    BL_TOGG, RGB_TOG, _______, KC_TRNS, _______, _______, KC_TRNS, KC_0,    KC_DOT,  _______, KC_ENT   \
+  GAME,    BL_TOGG, RGB_TOG, _______, KC_TRNS,     _______,      KC_TRNS, KC_0,    KC_DOT,  _______, KC_ENT   \
 ),
 
 /* GAME
@@ -101,12 +101,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |QWERTY|      |      |      | left |    space    | DOWN | RIGHT|  0   |  .   | ENTR |
  * `-----------------------------------------------------------------------------------'
  */
-[_GAME] = LAYOUT_preonic_grid( \
+[_GAME] = LAYOUT_preonic_1x2uC( \
   KC_ESC,  _______,       _______,    _______,     _______, KC_ESC,  KC_5,    KC_4,    KC_1,    KC_2,    KC_3,    KC_M,    \
   _______, _______,        _______,   _______,     _______, KC_PGUP, KC_T,    KC_R,    KC_Q,    KC_W,    KC_E,    KC_I,    \
   _______, LCTL(KC_PGUP), LALT(KC_Y), _______,     _______, KC_PGDN, KC_G,    KC_F,    KC_A,    KC_S,    KC_D,    KC_H,    \
-  _______, LCTL(KC_HOME), KC_F12,        LALT(KC_F2), _______, KC_N,    KC_B,    KC_V,    KC_Z,    KC_X,    KC_C,    KC_SLSH, \
-  QWERTY,  _______,       _______,    _______,     KC_LEFT, _______, KC_SPC,  KC_DOWN, KC_RGHT, KC_0,    KC_DOT,  KC_ENT   \
+  _______, LCTL(KC_HOME), KC_F12,     LALT(KC_F2), _______, KC_N,    KC_B,    KC_V,    KC_Z,    KC_X,    KC_C,    KC_SLSH, \
+  QWERTY,  _______,       _______,    _______,     KC_LEFT,      KC_SPC,      KC_DOWN, KC_RGHT, KC_0,    KC_DOT,  KC_ENT   \
 ),
 
 /* adjust ( LOWER + RAISE )
@@ -122,25 +122,26 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |      |MU_TOG|MU_MOD|      |      |             |      |      |      |      |      |
  * `-----------------------------------------------------------------------------------'
  */
-[_ADJUST] = LAYOUT_preonic_grid( \
+[_ADJUST] = LAYOUT_preonic_1x2uC( \
   KC_ESC,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
   RESET,   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
   KC_ASTG, MUV_DE,  MUV_IN,  _______, _______, _______, _______, _______, _______, _______, _______, _______,  \
-  _______, MU_TOG,  MU_MOD,  _______, _______, _______, _______, _______, _______, _______, _______, _______ \
+  _______, MU_TOG,  MU_MOD,  _______, _______,      _______,     _______, _______, _______, _______, _______ \
 )
 };
 
-uint16_t activeLayer;
 //kb startup custom code
 void startup_user() {
     #ifdef AUDIO_ENABLE
-    //audio_startup_custom();
+    PLAY_SONG(tone_one_up);
     #endif
 }
 //kb shutdown custom code
 void shutdown_user() {
-
+    #ifdef AUDIO_ENABLE
+    //PLAY_SONG(GOODBYE_SONG);
+    #endif
 }
 
 // hook into kb startup
@@ -151,7 +152,7 @@ void matrix_init_user(void) {
 // custom behavior for encoder interaction
 #ifdef ENCODER_ENABLE
 void encoder_update_user(uint8_t index, bool clockwise) {
-    switch (activeLayer) {
+    switch (get_highest_layer(default_layer_state)) {
         case _LOWER:
             clockwise ? tap_code(KC_PGDN) : tap_code(KC_PGUP); // Cycle Tabs in Chrome
             break;
@@ -167,12 +168,14 @@ void encoder_update_user(uint8_t index, bool clockwise) {
 }
 #endif  // ENCODER_ENABLE
 
+
 // key intercept to assign custom behavior
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case QWERTY:
       if (record->event.pressed) {
         layer_move(_QWERTY);
+
       }
       break;
     case GAME:
@@ -208,8 +211,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 //custom actions on layer change
 layer_state_t layer_state_set_user(layer_state_t state) {
-    activeLayer = get_highest_layer(state);
-    switch (activeLayer) {
+    switch (get_highest_layer(state)) {
     case _LOWER:
         rgblight_setrgb (0xFF,  0x00, 0xFF);
         break;
@@ -218,11 +220,14 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         break;
     case _ADJUST:
         rgblight_setrgb (0x00,  0x00, 0x00);
+        #ifdef AUDIO_ENABLE
+        PLAY_SONG(tone_coin);
+        #endif
         break;
     case _GAME:
         rgblight_setrgb (0xFF,  0x00, 0x00);
         #ifdef AUDIO_ENABLE
-        PLAY_SONG(tone_game);
+        PLAY_SONG(tone_one_up);
         #endif
         break;
     case _QWERTY: //the default layer

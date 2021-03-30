@@ -1,7 +1,12 @@
 /**
  * This contains all of the code specific to addressing the oled display
  */
+
+#include <stdio.h>
+
 #ifdef OLED_DRIVER_ENABLE
+uint32_t oled_timer = 0;
+
 //Setup some mask which can be or'd with bytes to turn off pixels
 const uint8_t single_bit_masks[8] = {127, 191, 223, 239, 247, 251, 253, 254};
 
@@ -75,16 +80,6 @@ static void render_status(void) {
     //oled_write_P(IS_LED_ON(led_usb_state, USB_LED_SCROLL_LOCK) ? PSTR("SCRLCK ") : PSTR("       "), false);
 }
 
-void oled_task_user(void) {
-    if (is_keyboard_master()) {
-        render_status(); // Renders the current keyboard state (layer, lock, caps, scroll, etc)
-    } else {
-        render_nininin_logo();
-    }
-}
-
-
-
 
 
 //fade the display out
@@ -112,5 +107,20 @@ static void fade_display(void) {
     }
 }
 
+void oled_task_user(void) {
+    update_log();
+
+    if (is_keyboard_master()) {
+        if (timer_elapsed32(oled_timer) > 30000) {
+            oled_off();
+            return;
+        } else {
+            oled_on();
+        }
+        render_status();  // Renders the current keyboard state (layer, lock, caps, scroll, etc)
+    } else {
+        render_nininin_logo();
+    }
+}
 
 #endif

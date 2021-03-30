@@ -18,6 +18,10 @@ float tone_game[][2]    = {
 float tone_goodbye[][2] = SONG(GOODBYE_SOUND);
 float music_scale[][2]  = SONG(MUSIC_SCALE_SOUND);
 
+float tone_coin[][2] = SONG(COIN);
+float tone_one_up[][2] = SONG(ONE_UP);
+float tone_sonic_ring[][2] = SONG(SONIC);
+float tone_zelda[][2] = SONG(ZELDA);
 
 //void audio_startup_custom() {
 //  PLAY_SONG(tone_startup);
